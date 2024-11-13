@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Nick Cwikla / COMP272-001
  *
  *   This java file contains the problem solutions for the methods lastBoulder,
  *   showDuplicates, and pair methods. You should utilize the Java Collection
@@ -64,11 +64,25 @@ public class ProblemSolutions {
      */
 
   public static int lastBoulder(int[] boulders) {
-
-      //
-      // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME / SECTION # ABOVE
-      //
-      return -1;
+     // Initialize priority queue in reverse order, to get mex element at top.
+      PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+     // Each boulder is added to the priority queue.
+      for (int boulder : boulders) {
+          pq.offer(boulder);
+      }
+     // Boulders keep being added until less than 1 are left.
+      while (pq.size() > 1) {
+         // Acquire the top boulder.
+          int first = pq.poll();
+         // Acquire the boulder that is second-to-first.
+          int second = pq.poll();
+         // If they are different and do not equal each other, difference of both is put back in queue.
+          if (first != second) {
+              pq.offer(first - second);
+          }
+      }
+     // Return the last remnants or 0 if nothing else is left.
+      return pq.isEmpty() ? 0 : pq.peek();
   }
 
 
@@ -90,12 +104,23 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> showDuplicates(ArrayList<String> input) {
-
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure result is sorted in ascending order
-
+       // Initialize ArrayList for storing duplicates.
+        ArrayList<String> duplicates = new ArrayList<>();
+       // Go through all the strings in the ArrayList.
+        for (int i = 0; i < input.size(); i++) {
+           // Acquire the string to check.
+            String current = input.get(i);
+           // Compare with the other strings in the list.
+            for (int j = i + 1; j < input.size(); j++) {
+               // If it is a duplicate and not in the list, then.
+                if (current.equals(input.get(j)) && !duplicates.contains(current)) {
+                   // Duplicate is added to the list.
+                    duplicates.add(current);
+                }
+            }
+        }
+       // List of duplicates is returned.
+        return duplicates;
     }
 
 
@@ -130,10 +155,40 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> pair(int[] input, int k) {
-
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure returned lists is sorted as indicated above
+       // Check how many times number appears in inputted array.
+        HashMap<Integer, Integer> pairNumber = new HashMap<>();
+       // ArrayList for storing the pairs.
+        ArrayList<String> pairs = new ArrayList<>();
+       // Count the occurrences for every number in the array.
+        for (int i : input) {
+            pairNumber.put(i, pairNumber.getOrDefault(i, 0) + 1);
+        }
+       // Go through each unique number in the HashMap.
+        for (Map.Entry<Integer, Integer> entry : pairNumber.entrySet()) {
+           // Acquire the number.
+            int i = entry.getKey();
+           // Determine the difference needed to make k.
+            int different = k - i;
+           // Make sure the difference exists in the map.
+            if (pairNumber.containsKey(different)) {
+               // If the number is equal to difference and appears less than twice, skip.
+                if (i == different && pairNumber.get(i) < 2) {
+                    continue;
+                }
+               // Go down through the count for number.
+                pairNumber.put(i, pairNumber.get(i) - 1);
+               // Go down through the count for the difference.
+                pairNumber.put(different, pairNumber.get(different) - 1);
+               // Make sure the number counts are not negative.
+                if (pairNumber.get(i) >= 0 && pairNumber.get(different) >= 0) {
+                   // Add the pairs in ascending order.
+                    pairs.add("(" + Math.min(i, different) + ", " + Math.max(i, different) + ")");
+                }
+            }
+        }
+       // Use the Collections framework to sort the list of paired numbers.
+        Collections.sort(pairs);
+       // Return the sorted list.
+        return pairs;
     }
 }

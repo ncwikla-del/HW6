@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Nick Cwikla / COMP272-001
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -150,9 +150,14 @@ class PriorityQueue<E, P> {
      */
 
     public Node add(E e, P priority) {
-
-        // YOUR CODE GOES HERE
-        return null;
+       // Make the new node.
+        Node node = new Node(e, priority, tree.size());
+       // New node is added to the heap.
+        tree.add(node);
+       // Pull up the node.
+        pullUp(node.idx);
+       // Reference to the node is then returned.
+        return node;
     }
 
 
@@ -167,9 +172,20 @@ class PriorityQueue<E, P> {
      */
 
     public boolean contains(E e) {
-
-        // ADD YOUR CODE HERE
-        return false;
+       // Initialize boolean to figure out if the element is in the queue.
+        boolean hasElement = false;
+       // Go through each object present in the tree.
+        for (Node check : this.tree) {
+           // Make sure value of e is matching the value of the current node.
+            if (check.value().equals(e)) {
+               // Match found so boolean is set to true.
+                hasElement = true;
+               // No need to look further so exit.
+                break;
+            }
+        }
+       // Element was found, then flag returns true otherwise it will return false.
+        return hasElement;
     }
 
 
